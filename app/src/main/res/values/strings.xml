@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DodgeBit_</string>
+    <string name="navigation_drawer_open">abrir</string>
+    <string name="navigation_drawer_close">cerrar</string>
+</resources>

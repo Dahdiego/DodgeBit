@@ -1,0 +1,31 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.dodgebit_.SwordGameView
+        android:id="@+id/swordGameView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/pause_button"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="180dp"
+        android:background="@drawable/pausa"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tvRecord"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="70dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Record: 0"
+        android:textSize="19sp"
+        android:textColor="@color/black"/>
+
+</FrameLayout>
