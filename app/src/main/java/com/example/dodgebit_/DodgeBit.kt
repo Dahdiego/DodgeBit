@@ -68,14 +68,14 @@ class DodgeBit : AppCompatActivity() {
         }
 
         private val backgroundImage =
-            BitmapFactory.decodeResource(resources, R.drawable.fondo1).let {
+            BitmapFactory.decodeResource(resources, R.drawable.fondo).let {
                 if (it.width <= 0 || it.height <= 0) {
                     throw IllegalArgumentException("Dimensiones Fondo invalidas")
                 }
                 it
             }
 
-        private val swordBitmap = BitmapFactory.decodeResource(resources, R.drawable.espada1).let {
+        private val swordBitmap = BitmapFactory.decodeResource(resources, R.drawable.espada).let {
             if (it.width <= 0 || it.height <= 0) {
                 throw IllegalArgumentException("Dimensiones espada invalidas")
             }
@@ -96,7 +96,7 @@ class DodgeBit : AppCompatActivity() {
         private var playerX = 0f
         private var puntos = 0
         private var maxScore = 0
-        private var isGameOver = false
+        private var GameOver = false
 
         fun pauseGame() {
             isPaused = true
@@ -109,7 +109,7 @@ class DodgeBit : AppCompatActivity() {
                     isPaused = false
                     handler.postDelayed(object : Runnable { // Reanudar el bucle de actualización
                         override fun run() {
-                            currentSpeed += 2f
+                            velocidad += 2f
                             handler.postDelayed(this, 5000)
                         }
                     }, 5000)
@@ -127,16 +127,17 @@ class DodgeBit : AppCompatActivity() {
             textSize = 50f
         }
 
-        private var swordCount = 0
-        private var originalSpeed = 12f
+        //private var swordCount = 0
+        private var velocidadOriginal = 12f
         private val handler = Handler(Looper.getMainLooper())
 
-        private var currentSpeed = originalSpeed
+        private var velocidad = velocidadOriginal
 
         init {
             handler.postDelayed(object : Runnable {
                 override fun run() {
-                    currentSpeed += 2f // Aumentar la velocidad actual en 2 cada 5 segundos
+                    velocidad += 2f
+                    tvVelocidad.text = "Velocidad: $velocidad"// Aumentar la velocidad actual en 2 cada 5 segundos
                     handler.postDelayed(this, 5000) // Ejecutar el Runnable cada 5 segundos
                 }
             }, 5000) // Empezar a ejecutar el Runnable después de 5 segundos
@@ -145,33 +146,34 @@ class DodgeBit : AppCompatActivity() {
         private fun resetSpeed() {
             maxScore = getRecord()!!
             tvRecord.text = "Record: $maxScore"
-            currentSpeed = originalSpeed
+            velocidad = velocidadOriginal
         }
 
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
 
-            // Draw background image
-            canvas.drawBitmap(backgroundImage, 0f, 0f, paint)
+            // Pintar fondo
+            canvas.drawBitmap(backgroundImage, -500f, 0f, paint)
 
-            if (!isGameOver) {
-                // Draw swords
+            if (!GameOver) {
+                // Pintar espadas
                 val iterator = swordList.iterator()
                 while (iterator.hasNext()) {
                     val sword = iterator.next()
                     canvas.drawBitmap(swordBitmap, sword.x, sword.y, paint)
                     if (!isPaused) {
-                        sword.y += currentSpeed
+                        sword.y += velocidad
                     }
                     if (sword.y > height) {
-                        // If the sword reaches the bottom of the screen, remove it using the iterator
+                        // Cuando llegan al final desaparecen
                         iterator.remove()
-                        swordCount++ // Add 1 to sword count
+                        //swordCount++
+                        addPoint() // Suma 1 al contador
                     } else if (sword.x <= playerX + playerWidth && sword.x + swordWidth >= playerX &&
                         sword.y + swordHeight >= height - playerHeight
                     ) {
                         // If the sword hits the player, end the game
-                        isGameOver = true
+                        GameOver = true
                         showGameOverDialog()
                     }
                 }
@@ -186,7 +188,7 @@ class DodgeBit : AppCompatActivity() {
                     )
                 }
 
-                // Draw player
+                // Draw Jugador
                 canvas.drawBitmap(
                     playerBitmap,
                     playerX,
@@ -194,17 +196,17 @@ class DodgeBit : AppCompatActivity() {
                     paint
                 )
 
-                // Draw score
-                canvas.drawText("Puntos: $puntos", 60f, 150f, paint)
+                // Pintar puntos
+               // canvas.drawText("Puntos: $puntos", 60f, 150f, paint)
 
                 //Pintar velocidad
-                canvas.drawText("Velocidad: $currentSpeed", 700f, 150f, paint)
+                //canvas.drawText("Velocidad: $currentSpeed", 700f, 150f, paint)
 
-                // Update score and reset sword count
-                puntos += swordCount
-                swordCount = 0
+                // Actualizar puntos
+                //puntos += swordCount
+                //swordCount = 0
 
-                // Invalidate to update the view
+
                // addPoint()
                 invalidate()
             } else {
@@ -212,10 +214,10 @@ class DodgeBit : AppCompatActivity() {
                 resetSpeed()
             }
         }
-        //private fun addPoint() {
-        //    puntos++
-         //   tvPuntos.text = puntos.toString()
-        //}
+        private fun addPoint() {
+            puntos++
+            tvPuntos.text = puntos.toString()
+        }
 
         private fun showGameOverDialog() {
             alertDialog = AlertDialog.Builder(context)
@@ -224,9 +226,9 @@ class DodgeBit : AppCompatActivity() {
                 .setCancelable(false)
                 .setPositiveButton("Reiniciar") { _, _ ->
                     puntos = 0
-                    swordCount = 0
+                    //swordCount = 0
                     swordList.clear()
-                    isGameOver = false
+                    GameOver = false
                     invalidate()
                 }
                 .setNegativeButton("Salir") { _, _ ->
