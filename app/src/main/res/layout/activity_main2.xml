@@ -18,6 +18,28 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/tvPuntos"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Puntos: 0"
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/tvVelocidad"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="245dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="velocidad: 12.0"
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
+
+    <TextView
         android:id="@+id/tvRecord"
         android:layout_width="160dp"
         android:layout_height="40dp"
@@ -26,6 +48,6 @@
         android:fontFamily="sans-serif-medium"
         android:text="Record: 0"
         android:textSize="18sp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/white"/>
 
 </FrameLayout>

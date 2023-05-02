@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.os.Handler
@@ -25,6 +26,8 @@ class DodgeBit : AppCompatActivity() {
     private lateinit var db: SQLiteDatabase
     private lateinit var gameView: SwordGameView
     private lateinit var tvRecord: TextView
+    private lateinit var tvPuntos: TextView
+    private lateinit var tvVelocidad: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +35,8 @@ class DodgeBit : AppCompatActivity() {
         setContentView(R.layout.activity_main2)
 
         tvRecord = findViewById(R.id.tvRecord)
+        tvPuntos = findViewById(R.id.tvPuntos)
+        tvVelocidad = findViewById(R.id.tvVelocidad)
         dbHelper = SQLiteHelper(this)
 
         val pauseButton = findViewById<Button>(R.id.pause_button)
@@ -44,7 +49,9 @@ class DodgeBit : AppCompatActivity() {
         pauseButton.setOnClickListener {
             gameView.pauseGame()
         }
-        tvRecord.text = "Record: ${gameView.getRecord()}"
+        tvRecord.post {
+            tvRecord.text = "Record: ${gameView.getRecord()}"
+        }
     }
 
     class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
@@ -52,6 +59,8 @@ class DodgeBit : AppCompatActivity() {
         private lateinit var dbHelper: SQLiteHelper
         private lateinit var db: SQLiteDatabase
         private lateinit var tvRecord: TextView
+        private lateinit var tvPuntos: TextView
+        private lateinit var tvVelocidad: TextView
         private lateinit var alertDialog: AlertDialog
         private var isPaused = false
         fun setDbHelper(dbHelper: SQLiteHelper) { // Aquí se inicializa dbHelper
@@ -66,13 +75,13 @@ class DodgeBit : AppCompatActivity() {
                 it
             }
 
-        private val swordBitmap = BitmapFactory.decodeResource(resources, R.drawable.espada2).let {
+        private val swordBitmap = BitmapFactory.decodeResource(resources, R.drawable.espada1).let {
             if (it.width <= 0 || it.height <= 0) {
                 throw IllegalArgumentException("Dimensiones espada invalidas")
             }
             it
         }
-        private val playerBitmap = BitmapFactory.decodeResource(resources, R.drawable.player3).let {
+        private val playerBitmap = BitmapFactory.decodeResource(resources, R.drawable.jugador).let {
             if (it.width <= 0 || it.height <= 0) {
                 throw IllegalArgumentException("Dimensiones player invalidas")
             }
@@ -196,17 +205,22 @@ class DodgeBit : AppCompatActivity() {
                 swordCount = 0
 
                 // Invalidate to update the view
+               // addPoint()
                 invalidate()
             } else {
                 checkRecord()
                 resetSpeed()
             }
         }
+        //private fun addPoint() {
+        //    puntos++
+         //   tvPuntos.text = puntos.toString()
+        //}
 
         private fun showGameOverDialog() {
             alertDialog = AlertDialog.Builder(context)
                 .setTitle("Game Over")
-                .setMessage("Cigarros sin Fumar: $puntos")
+                .setMessage("Puntuación : $puntos")
                 .setCancelable(false)
                 .setPositiveButton("Reiniciar") { _, _ ->
                     puntos = 0
@@ -276,3 +290,4 @@ class DodgeBit : AppCompatActivity() {
         const val COL_POINTS = "puntos"
     }
 }
+
