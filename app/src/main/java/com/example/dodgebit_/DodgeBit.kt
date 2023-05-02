@@ -21,32 +21,42 @@ import com.example.dodgebit_.SQLiteHelper.Companion.TABLE_NAME
 import java.util.*
 
 class DodgeBit : AppCompatActivity() {
-    private lateinit var gameView: SwordGameView
-    private lateinit var tvRecord: TextView
     private lateinit var dbHelper: SQLiteHelper
     private lateinit var db: SQLiteDatabase
+    private lateinit var gameView: SwordGameView
+    private lateinit var tvRecord: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
+        tvRecord = findViewById(R.id.tvRecord)
+        dbHelper = SQLiteHelper(this)
 
         val pauseButton = findViewById<Button>(R.id.pause_button)
-        tvRecord = findViewById(R.id.tvRecord)
-        gameView = findViewById(R.id.swordGameView) // Inicializar gameView
+        gameView = findViewById(R.id.swordGameView)
 
-        dbHelper = SQLiteHelper(this)
-        db = dbHelper.writableDatabase
+        gameView.setDbHelper(dbHelper) // Aquí se pasa dbHelper a la clase SwordGameView
+
+
 
         pauseButton.setOnClickListener {
             gameView.pauseGame()
         }
+        tvRecord.text = "Record: ${gameView.getRecord()}"
     }
 
-    inner class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+    class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
+        private lateinit var dbHelper: SQLiteHelper
+        private lateinit var db: SQLiteDatabase
+        private lateinit var tvRecord: TextView
         private lateinit var alertDialog: AlertDialog
         private var isPaused = false
+        fun setDbHelper(dbHelper: SQLiteHelper) { // Aquí se inicializa dbHelper
+            this.dbHelper = dbHelper
+        }
 
         private val backgroundImage =
             BitmapFactory.decodeResource(resources, R.drawable.fondo1).let {
@@ -76,6 +86,7 @@ class DodgeBit : AppCompatActivity() {
         private val swordList = mutableListOf<Sword>()
         private var playerX = 0f
         private var puntos = 0
+        private var maxScore = 0
         private var isGameOver = false
 
         fun pauseGame() {
@@ -123,6 +134,8 @@ class DodgeBit : AppCompatActivity() {
         }
 
         private fun resetSpeed() {
+            maxScore = getRecord()!!
+            tvRecord.text = "Record: $maxScore"
             currentSpeed = originalSpeed
         }
 
@@ -220,7 +233,8 @@ class DodgeBit : AppCompatActivity() {
             return true
         }
 
-        private fun checkRecord() {
+        fun checkRecord() {
+            db = dbHelper.readableDatabase
             val record = getRecord()
             if (record == null || puntos > record) {
                 updateRecord()
@@ -228,7 +242,8 @@ class DodgeBit : AppCompatActivity() {
             }
         }
 
-        private fun getRecord(): Int? {
+        fun getRecord(): Int? {
+            db = dbHelper.readableDatabase
             val cursor = db.query(
                 TABLE_NAME,
                 arrayOf(COL_POINTS),
@@ -242,7 +257,9 @@ class DodgeBit : AppCompatActivity() {
             return if (cursor.moveToFirst()) cursor.getInt(0) else null
         }
 
-        private fun updateRecord() {
+        fun updateRecord() {
+            db = dbHelper.writableDatabase
+            db = dbHelper.readableDatabase
             val values = ContentValues().apply {
                 put(COL_POINTS, puntos)
             }
