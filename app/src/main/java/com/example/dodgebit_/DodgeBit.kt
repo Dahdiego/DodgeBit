@@ -27,10 +27,8 @@ class DodgeBit : AppCompatActivity() {
 
         val pauseButton = findViewById<Button>(R.id.pause_button)
         gameView = findViewById(R.id.swordGameView)
-
+        gameView.initViews(tvRecord, tvPuntos, tvVelocidad)
         gameView.setDbHelper(dbHelper) // Aquí se pasa dbHelper a la clase SwordGameView
-
-
 
         pauseButton.setOnClickListener {
             gameView.pauseGame()

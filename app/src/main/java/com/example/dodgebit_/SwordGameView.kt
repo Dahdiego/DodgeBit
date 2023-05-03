@@ -107,6 +107,12 @@ class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attr
         }, 5000) // Empezar a ejecutar el Runnable después de 5 segundos
     }
 
+    fun initViews(tvRecord: TextView, tvPuntos: TextView, tvVelocidad: TextView) {
+        this.tvRecord = tvRecord
+        this.tvPuntos = tvPuntos
+        this.tvVelocidad = tvVelocidad
+    }
+
     private fun resetSpeed() {
         maxScore = getRecord()!!
         tvRecord.text = "Record: $maxScore"
