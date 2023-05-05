@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             R.id.icerrar -> {
-                // Acción al seleccionar la opción 2
+                // Acción al seleccionar la opción 3
                 finish()
             }
         }

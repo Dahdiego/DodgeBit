@@ -7,13 +7,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import java.util.*
 
 class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
@@ -38,7 +38,7 @@ class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attr
             it
         }
 
-    private val swordBitmap = BitmapFactory.decodeResource(resources, R.drawable.espada).let {
+    private val swordBitmap = BitmapFactory.decodeResource(resources, R.drawable.espada2).let {
         if (it.width <= 0 || it.height <= 0) {
             throw IllegalArgumentException("Dimensiones espada invalidas")
         }
@@ -142,7 +142,9 @@ class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attr
                 } else if (sword.x <= playerX + playerWidth && sword.x + swordWidth >= playerX &&
                     sword.y + swordHeight >= height - playerHeight
                 ) {
-                    // If the sword hits the player, end the game
+                    // Si la espada toca al jugador, el jugador pierde
+                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                    vibrator.vibrate(300)
                     GameOver = true
                     showGameOverDialog()
                 }
@@ -184,9 +186,11 @@ class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attr
             resetSpeed()
         }
     }
+
+
     private fun addPoint() {
         puntos++
-        tvPuntos.text = puntos.toString()
+        tvPuntos.text = "Puntos : $puntos"
     }
 
     private fun showGameOverDialog() {
@@ -200,6 +204,8 @@ class SwordGameView(context: Context, attrs: AttributeSet?) : View(context, attr
                 swordList.clear()
                 GameOver = false
                 invalidate()
+                tvPuntos.text = "Puntos: $puntos"
+                tvVelocidad.text = "Velocidad: $velocidad"
             }
             .setNegativeButton("Salir") { _, _ ->
                 (context as Activity).finish()

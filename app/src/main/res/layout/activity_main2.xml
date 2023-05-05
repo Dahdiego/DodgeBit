@@ -10,11 +10,11 @@
 
     <Button
         android:id="@+id/pause_button"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="180dp"
-        android:background="@drawable/pausa"
+        android:background="@drawable/pausablanco"
         android:textSize="18sp" />
 
     <TextView
@@ -25,14 +25,14 @@
         android:layout_marginTop="30dp"
         android:fontFamily="sans-serif-medium"
         android:text="Puntos: 0"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tvVelocidad"
         android:layout_width="160dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="270dp"
+        android:layout_marginLeft="265dp"
         android:layout_marginTop="30dp"
         android:fontFamily="sans-serif-medium"
         android:text="Velocidad: 12.0"
